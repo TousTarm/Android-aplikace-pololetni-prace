@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database name
     private static final String DATABASE_NAME = "CardSets";
@@ -27,8 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Card Sets table column names
     public static final String COLUMN_CARD_SET_NAME = "card_set_name";
 
-    // Cards table column names
     public static final String COLUMN_QUESTION = "question";
+    public static final String COLUMN_HINT = "hint";
     public static final String COLUMN_ANSWER = "answer";
     public static final String COLUMN_SET_ID = "set_id";
 
@@ -41,9 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_QUESTION + " TEXT, " +
             COLUMN_ANSWER + " TEXT, " +
+            COLUMN_HINT + " TEXT, " + // Add the new column here
             COLUMN_SET_ID + " INTEGER, " +
             "FOREIGN KEY(" + COLUMN_SET_ID + ") REFERENCES " + TABLE_CARD_SETS + "(" + COLUMN_ID + ")" +
             ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -93,6 +95,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return cardSets;
     }
-
-
 }

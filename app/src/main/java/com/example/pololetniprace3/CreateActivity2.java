@@ -37,6 +37,7 @@ public class CreateActivity2 extends AppCompatActivity {
         // Find input fields and next button
         EditText questionEditText = findViewById(R.id.question);
         EditText answerEditText = findViewById(R.id.answer);
+        EditText hintEditText = findViewById(R.id.hint); // Add this line to find the hint EditText
         Button nextButton = findViewById(R.id.next);
 
         // Set click listener for the next button
@@ -46,18 +47,18 @@ public class CreateActivity2 extends AppCompatActivity {
                 // Get the text from input fields
                 String question = questionEditText.getText().toString().trim();
                 String answer = answerEditText.getText().toString().trim();
+                String hint = hintEditText.getText().toString().trim(); // Get hint text
 
                 // Insert the card into the database
                 if (!question.isEmpty() && !answer.isEmpty()) {
-                    insertCard(question, answer);
+                    insertCard(question, answer, hint); // Pass hint as an argument
                 } else {
                     // Show a toast message if either question or answer is empty
                     Toast.makeText(CreateActivity2.this, "Please enter both question and answer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-        Button doneButton = findViewById(R.id.done);
+    Button doneButton = findViewById(R.id.done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,9 +74,11 @@ public class CreateActivity2 extends AppCompatActivity {
     }
 
     // Method to insert a new card into the database
-    private void insertCard(String question, String answer) {
+    // Method to insert a new card into the database
+    private void insertCard(String question, String answer, String hint) {
         EditText questionEditText = findViewById(R.id.question);
         EditText answerEditText = findViewById(R.id.answer);
+        EditText hintEditText = findViewById(R.id.hint); // Add reference to the hint EditText
 
         // Ensure currentCardSetId is valid
         if (currentCardSetId == -1) {
@@ -87,12 +90,14 @@ public class CreateActivity2 extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_QUESTION, question);
         values.put(DatabaseHelper.COLUMN_ANSWER, answer);
+        values.put(DatabaseHelper.COLUMN_HINT, hint); // Insert hint into ContentValues
         values.put(DatabaseHelper.COLUMN_SET_ID, currentCardSetId); // Set the current card set id as owner
         long result = db.insert(DatabaseHelper.TABLE_CARDS, null, values);
         db.close();
 
         questionEditText.getText().clear();
         answerEditText.getText().clear();
+        hintEditText.getText().clear(); // Clear the hint field after insertion
 
         if (result != -1) {
             Toast.makeText(this, "Card inserted successfully", Toast.LENGTH_SHORT).show();
@@ -102,6 +107,7 @@ public class CreateActivity2 extends AppCompatActivity {
             Toast.makeText(this, "Failed to insert card", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     protected void onDestroy() {

@@ -22,6 +22,7 @@ public class PracticeActivity2 extends AppCompatActivity {
     private TextView questionTextView;
     private Button done;
     private Button nextButton;
+    private Button hintButton; // Add hint button
     private String cardSetName;
     private List<String> questionsList;
     private Set<String> shownQuestionsSet;
@@ -55,10 +56,39 @@ public class PracticeActivity2 extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Clear the hint text
+                TextView hintTextView = findViewById(R.id.texthint);
+                hintTextView.setText("");
+
+                // Get the next random question
                 String randomQuestion = getRandomQuestion();
                 questionTextView.setText(randomQuestion);
             }
         });
+
+
+        // Initialize hint button
+        hintButton = findViewById(R.id.hint);
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current question displayed
+                String currentQuestion = questionTextView.getText().toString();
+                // Retrieve hint from the database based on the current question
+                String hint = getHintForQuestion(currentQuestion);
+                // Display the hint or a message if no hint is available
+                if (!hint.isEmpty()) {
+                    // Set the hint text in the appropriate TextView
+                    TextView hintTextView = findViewById(R.id.texthint);
+                    hintTextView.setText(hint);
+                } else {
+                    // Set a message if no hint is available
+                    TextView hintTextView = findViewById(R.id.texthint);
+                    hintTextView.setText("No hint was set.");
+                }
+            }
+        });
+
 
         View rectangleView = findViewById(R.id.rectangle);
         rectangleView.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +148,25 @@ public class PracticeActivity2 extends AppCompatActivity {
         return (answer != null) ? answer : question;
     }
 
+    private String getHintForQuestion(String question) {
+        String hint = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + DatabaseHelper.COLUMN_HINT +
+                " FROM " + DatabaseHelper.TABLE_CARDS +
+                " WHERE " + DatabaseHelper.COLUMN_QUESTION + " = ?", new String[]{question});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int hintIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_HINT);
+            if (hintIndex != -1) {
+                hint = cursor.getString(hintIndex);
+            }
+            cursor.close();
+        }
+
+        db.close();
+        return (hint != null) ? hint : "";
+    }
+
     private List<String> getQuestionsForCardSet(String cardSetName) {
         List<String> questionsList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -162,4 +211,3 @@ public class PracticeActivity2 extends AppCompatActivity {
         return randomQuestion;
     }
 }
-

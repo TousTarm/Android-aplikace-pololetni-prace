@@ -41,6 +41,19 @@
         android:text="Done"
         android:textColor="@android:color/white" />
 
+    <Button
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="@color/black"
+        android:elevation="4dp"
+        android:text="hint"
+        android:textColor="@android:color/white" />
+
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
@@ -50,9 +63,22 @@
         android:layout_alignEnd="@+id/rectangle"
         android:layout_alignBottom="@+id/rectangle"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="170dp"
         android:gravity="center"
         android:ems="10"/>
+
+    <TextView
+        android:id="@+id/texthint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rectangle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:gravity="center"
+        android:textColor="@color/gray"
+        android:maxWidth="200dp"/>
+
 </RelativeLayout>

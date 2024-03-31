@@ -84,7 +84,7 @@ public class PracticeActivity2 extends AppCompatActivity {
                 } else {
                     // Set a message if no hint is available
                     TextView hintTextView = findViewById(R.id.texthint);
-                    hintTextView.setText("No hint was set.");
+                    hintTextView.setText("No hint was set");
                 }
             }
         });

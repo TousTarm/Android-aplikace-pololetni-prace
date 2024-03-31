@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".CreateActivity1">
 
     <View
@@ -13,7 +13,8 @@
         android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-    android:background="@color/light_blue" />
+        android:background="@drawable/rounded_background" />
+
 
     <Button
         android:id="@+id/next"
@@ -41,6 +42,7 @@
         android:text="Done"
         android:textColor="@android:color/white" />
 
+
     <EditText
         android:id="@+id/question"
         android:layout_width="wrap_content"
@@ -50,12 +52,15 @@
         android:layout_alignEnd="@+id/rectangle"
         android:layout_alignBottom="@+id/rectangle"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="180dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginBottom="170dp"
+        android:layout_marginBottom="180dp"
         android:ems="10"
-        android:inputType="text"
-        android:hint="Question here" />
+        android:hint="Question here"
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:gravity="center"
+        android:scrollHorizontally="false" />
 
     <EditText
         android:id="@+id/answer"
@@ -69,5 +74,8 @@
         android:layout_marginBottom="120dp"
         android:ems="10"
         android:hint="Answer here"
-        android:inputType="text" />
+        android:inputType="text"
+        android:gravity="center"
+        android:minHeight="48dp" />
+
 </RelativeLayout>

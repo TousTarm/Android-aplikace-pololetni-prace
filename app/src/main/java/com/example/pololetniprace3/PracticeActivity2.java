@@ -6,13 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.pololetniprace3.DatabaseHelper;
-import com.example.pololetniprace3.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,10 +45,9 @@ public class PracticeActivity2 extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirect to MainActivity
                 Intent intent = new Intent(PracticeActivity2.this, MainActivity.class);
                 startActivity(intent);
-                finish(); // Close this activity
+                finish();
             }
         });
 
@@ -69,13 +64,58 @@ public class PracticeActivity2 extends AppCompatActivity {
         rectangleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the text from the answer TextView
-                String answer = "This is the answer."; // Replace this with your actual answer
-
-                // Replace the text in the question TextView with the answer
-                questionTextView.setText(answer);
+                String currentText = questionTextView.getText().toString();
+                if (questionsList.contains(currentText)) {
+                    String answer = getAnswerForQuestion(currentText);
+                    questionTextView.setText(answer);
+                } else {
+                    // If current text is an answer, find the corresponding question
+                    String originalQuestion = getQuestionForAnswer(currentText);
+                    questionTextView.setText(originalQuestion);
+                }
             }
         });
+
+    }
+
+    private String getQuestionForAnswer(String answer) {
+        String question = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + DatabaseHelper.COLUMN_QUESTION +
+                " FROM " + DatabaseHelper.TABLE_CARDS +
+                " WHERE " + DatabaseHelper.COLUMN_ANSWER + " = ?", new String[]{answer});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int questionIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_QUESTION);
+            if (questionIndex != -1) {
+                question = cursor.getString(questionIndex);
+            }
+            cursor.close();
+        }
+
+        db.close();
+        return (question != null) ? question : "Question not found";
+    }
+
+    private String getAnswerForQuestion(String question) {
+        String answer = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + DatabaseHelper.COLUMN_ANSWER +
+                " FROM " + DatabaseHelper.TABLE_CARDS +
+                " WHERE " + DatabaseHelper.COLUMN_QUESTION + " = ?", new String[]{question});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int answerIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_ANSWER);
+            if (answerIndex != -1) {
+                answer = cursor.getString(answerIndex);
+            }
+            cursor.close();
+        }
+
+        db.close();
+
+        // If answer is not found, return the original question
+        return (answer != null) ? answer : question;
     }
 
     private List<String> getQuestionsForCardSet(String cardSetName) {
@@ -104,25 +144,22 @@ public class PracticeActivity2 extends AppCompatActivity {
     }
 
     private String getRandomQuestion() {
-        // Ensure there are questions left to show
         if (questionsList.isEmpty()) {
             return "No questions available for this card set.";
         }
 
-        // If all questions have been shown at least once, reset the shown questions set
         if (shownQuestionsSet.size() == questionsList.size()) {
             shownQuestionsSet.clear();
         }
 
-        // Get a random question from the list
         Random random = new Random();
         String randomQuestion;
         do {
             randomQuestion = questionsList.get(random.nextInt(questionsList.size()));
         } while (shownQuestionsSet.contains(randomQuestion));
 
-        // Add the question to the shown questions set
         shownQuestionsSet.add(randomQuestion);
         return randomQuestion;
     }
 }
+

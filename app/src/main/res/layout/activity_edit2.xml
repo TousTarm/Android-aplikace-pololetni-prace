@@ -55,7 +55,7 @@
         android:textColor="@android:color/white" />
 
     <EditText
-        android:id="@+id/text"
+        android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/rectangle"
@@ -71,7 +71,7 @@
         android:ems="10"/>
 
     <EditText
-        android:id="@+id/hint"
+        android:id="@+id/answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rectangle"
@@ -85,7 +85,7 @@
         android:textColor="@color/gray" />
 
     <EditText
-        android:id="@+id/texthint"
+        android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rectangle"

@@ -63,13 +63,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older tables if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARDS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_SETS);
+        try {
+            // Drop older tables if existed
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARDS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_SETS);
 
-        // Create tables again
-        onCreate(db);
+            // Create tables again
+            onCreate(db);
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error upgrading database: " + e.getMessage());
+        }
     }
+
 
     public List<String> getAllCardSets() {
         List<String> cardSets = new ArrayList<>();
@@ -98,16 +103,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method to retrieve card data by ID
     @SuppressLint("Range")
     public String[] getCardDataById(int cardId) {
-        String[] cardData = new String[3]; // Assuming there are 3 fields: question, hint, and answer
+        String[] cardData = null; // Initialize to null
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         try {
             cursor = db.query(TABLE_CARDS, new String[]{COLUMN_QUESTION, COLUMN_HINT, COLUMN_ANSWER}, COLUMN_ID + "=?",
                     new String[]{String.valueOf(cardId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
+                // Create the array if a valid card is found
+                cardData = new String[3];
                 cardData[0] = cursor.getString(cursor.getColumnIndex(COLUMN_QUESTION));
                 cardData[1] = cursor.getString(cursor.getColumnIndex(COLUMN_HINT));
                 cardData[2] = cursor.getString(cursor.getColumnIndex(COLUMN_ANSWER));
+                Log.d("DatabaseHelper", "Retrieved data for card ID " + cardId);
+                // Log the retrieved data
+                Log.d("DatabaseHelper", "Question: " + cardData[0]);
+                Log.d("DatabaseHelper", "Hint: " + cardData[1]);
+                Log.d("DatabaseHelper", "Answer: " + cardData[2]);
             }
         } catch (Exception e) {
             Log.e("DatabaseHelper", "Error fetching card data by ID: " + e.getMessage());
@@ -119,6 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return cardData;
     }
+
 
     public void updateCardValues(int cardId, String question, String hint, String answer) {
         SQLiteDatabase db = this.getWritableDatabase();

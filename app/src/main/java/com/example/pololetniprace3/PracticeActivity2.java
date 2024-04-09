@@ -127,6 +127,25 @@ public class PracticeActivity2 extends AppCompatActivity {
         return (question != null) ? question : "Question not found";
     }
 
+    private String getHintForQuestion(String question) {
+        String hint = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + DatabaseHelper.COLUMN_HINT +
+                " FROM " + DatabaseHelper.TABLE_CARDS +
+                " WHERE " + DatabaseHelper.COLUMN_QUESTION + " = ?", new String[]{question});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int hintIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_HINT);
+            if (hintIndex != -1) {
+                hint = cursor.getString(hintIndex);
+            }
+            cursor.close();
+        }
+
+        db.close();
+        return (hint != null) ? hint : "";
+    }
+
     private String getAnswerForQuestion(String question) {
         String answer = null;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -148,24 +167,6 @@ public class PracticeActivity2 extends AppCompatActivity {
         return (answer != null) ? answer : question;
     }
 
-    private String getHintForQuestion(String question) {
-        String hint = null;
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + DatabaseHelper.COLUMN_HINT +
-                " FROM " + DatabaseHelper.TABLE_CARDS +
-                " WHERE " + DatabaseHelper.COLUMN_QUESTION + " = ?", new String[]{question});
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int hintIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_HINT);
-            if (hintIndex != -1) {
-                hint = cursor.getString(hintIndex);
-            }
-            cursor.close();
-        }
-
-        db.close();
-        return (hint != null) ? hint : "";
-    }
 
     private List<String> getQuestionsForCardSet(String cardSetName) {
         List<String> questionsList = new ArrayList<>();

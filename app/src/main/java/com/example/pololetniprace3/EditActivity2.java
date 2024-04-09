@@ -2,16 +2,18 @@ package com.example.pololetniprace3;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.content.Intent;
+import android.widget.Toast;
 
 public class EditActivity2 extends AppCompatActivity {
 
     private EditText questionEditText;
     private EditText hintEditText;
-    private EditText valueEditText;
+    private EditText answerEditText;
     private DatabaseHelper dbHelper;
     private int currentCardId; // To keep track of the current card ID
 
@@ -21,9 +23,9 @@ public class EditActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_edit2);
 
         // Initialize EditText views
-        questionEditText = findViewById(R.id.text);
+        questionEditText = findViewById(R.id.question);
         hintEditText = findViewById(R.id.hint);
-        valueEditText = findViewById(R.id.texthint);
+        answerEditText = findViewById(R.id.answer);
 
         // Initialize dbHelper
         dbHelper = new DatabaseHelper(this);
@@ -35,7 +37,7 @@ public class EditActivity2 extends AppCompatActivity {
         // Set card data to EditText fields
         questionEditText.setText(cardData[0]);
         hintEditText.setText(cardData[1]);
-        valueEditText.setText(cardData[2]);
+        answerEditText.setText(cardData[2]);
 
         // Set OnClickListener for the "Next" button
         Button nextButton = findViewById(R.id.next);
@@ -65,6 +67,7 @@ public class EditActivity2 extends AppCompatActivity {
             }
         });
 
+        // Set OnClickListener for the "Delete" button
         Button deleteButton = findViewById(R.id.delete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,33 +75,40 @@ public class EditActivity2 extends AppCompatActivity {
                 // Delete the current card
                 dbHelper.deleteCard(currentCardId);
 
-                // Update current card ID
-                currentCardId--;
-
                 // Load the next card
                 loadNextCard();
             }
         });
-
     }
 
     private void updateCardValuesInDatabase(int cardId) {
         String question = questionEditText.getText().toString();
         String hint = hintEditText.getText().toString();
-        String answer = valueEditText.getText().toString();
+        String answer = answerEditText.getText().toString();
         dbHelper.updateCardValues(cardId, question, hint, answer);
     }
 
     private void loadNextCard() {
-        int smallestCardId = dbHelper.getSmallestCardId();
-        if (smallestCardId != -1) {
-            String[] nextCardData = dbHelper.getCardDataById(smallestCardId);
-            if (nextCardData != null) {
-                questionEditText.setText(nextCardData[0]);
-                hintEditText.setText(nextCardData[1]);
-                valueEditText.setText(nextCardData[2]);
-                currentCardId = smallestCardId; // Update current card ID
-            }
+        // Increment the current card ID to get data for the next card
+
+        // Retrieve data for the next card
+        String[] nextCardData = dbHelper.getCardDataById(currentCardId);
+
+        // Check if data for the next card exists
+        if (nextCardData != null) {
+            // Update the EditText fields with data for the next card
+            questionEditText.setText(nextCardData[0]);
+            hintEditText.setText(nextCardData[1]);
+            answerEditText.setText(nextCardData[2]);
+
+            // Update card values in the database
+            updateCardValuesInDatabase(currentCardId);
+        } else {
+            // Decrement the current card ID as no next card exists
+            currentCardId--;
+
+            // Display a toast message indicating it's the last card
+            Toast.makeText(this, "This is the last card of the set", Toast.LENGTH_SHORT).show();
         }
     }
 }

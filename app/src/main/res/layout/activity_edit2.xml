@@ -40,7 +40,7 @@
         android:elevation="4dp"
         android:text="Done"
         android:textColor="@android:color/white" />
-
+<!--
     <Button
         android:id="@+id/delete"
         android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
         android:elevation="4dp"
         android:text="Delete"
         android:textColor="@android:color/white" />
+        -->
 
     <EditText
         android:id="@+id/question"

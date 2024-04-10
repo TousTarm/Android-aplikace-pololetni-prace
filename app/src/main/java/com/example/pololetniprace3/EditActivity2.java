@@ -67,7 +67,7 @@ public class EditActivity2 extends AppCompatActivity {
             }
         });
 
-        // Set OnClickListener for the "Delete" button
+        /*
         Button deleteButton = findViewById(R.id.delete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +79,9 @@ public class EditActivity2 extends AppCompatActivity {
                 loadNextCard();
             }
         });
+         */
     }
+
 
     private void updateCardValuesInDatabase(int cardId) {
         String question = questionEditText.getText().toString();

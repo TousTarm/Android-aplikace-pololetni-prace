@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         Button practice = findViewById(R.id.practice);
         Button create = findViewById(R.id.create);
         Button edit = findViewById(R.id.edit);
-        Button add = findViewById(R.id.add);
+        //Button add = findViewById(R.id.add);
 
         practice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editIntent = new Intent(MainActivity.this, EditActivity1.class);
+                Intent editIntent = new Intent(MainActivity.this, EditActivity2.class);
                 startActivity(editIntent);
             }
         });
-
+        /*
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(addIntent);
             }
         });
-
-
+         */
     }
 }
